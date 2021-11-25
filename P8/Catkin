@@ -1,0 +1,128 @@
+sourcing workscpae. run in workspace terminal source devel/setup.bash
+
+#Create the package 
+catkin_create_pkg <package_name> [depend1] [depend2] [depend3]
+
+run catkin_make on ~/catkin_ws to build the packages
+
+#listing package dependencies 
+rospack depends1 <package name>
+
+#Start core 
+roscore
+
+#List nodes 
+rosnode list
+
+#infoe about a node 
+rosnode info /rosout
+
+#running node by using package name
+rosrun turtlesim turtlesim_node
+
+#renaming nodes on launch
+rosrun turtlesim turtlesim_node __name:=my_turtle
+
+#ping node
+rosnode ping my_turtle
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+TOPIC
+#dynamic graph of node communication
+rosrun rqt_graph rqt_graph
+
+
+#rostopic help
+rostopic -h
+
+#printing topic information
+rostopic echo <topic>
+rostopic echo /turtle1/cmd_vel #as a side effect the echo also subscribes to the cmd_vel topic
+
+#rostopic list help
+rostopic list -h
+
+#listing publish and subscribe relations between topics - verbose
+rostopic list -v
+
+#Topic Type
+rostopic type /turtle1/cmd_vel
+
+#type details 
+rosmsg show geometry_msgs/Twist
+
+#publishing data to a topic 
+#rostopic pub indicates the we are publishing. -1 indicates we will publish 1 message and exit. topic name. message type. -- indicates following args are options. message in the required messageType
+rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 1.8]'
+
+#steady stream of publishes
+rostopic pub /turtle1/cmd_vel geometry_msgs/Twist -r 1 -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, -1.8]'
+
+#report on publish frequency
+rostopic hz /turtle1/pose
+
+#plot of data publishes on topics
+rosrun rqt_plot rqt_plot
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#SERVICES ALLOWS FOR SENDING A REQUEST AND RECEIVING A RESPONSE
+#there are 9 services
+rosservice list
+
+#services have types
+rosservice type /clear #empty types send no data when making a request and receive no data on the response
+
+#calling a service
+rosservice call /clear #no arguments beacuse clear is of type empty
+
+#checking service arguments
+rosservice type /spawn | rossrv show
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ROsPARAMS
+#lsiting params
+rosparam list
+
+#changing param (background color)
+rosparam set /turtlesim/background_r 150 #change the color
+rosservice call /clear #call clear to update
+
+#checking param values
+rosparam get /turtlesim/background_g 
+
+#getting all params
+rosparam get /
+
+#writing params to file
+rosparam dump params.yaml
+
+#loading params.yaml
+rosparam load params.yaml copy_turtle
+
+#usgin loaded file
+rosparam get /copy_turtle/turtlesim/background_b
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+CONSOLE AND LOGGER 
+#console
+rosrun rqt_console rqt_console
+
+#logger
+rosrun rqt_logger_level rqt_logger_level
+
+----------------------------------------------------------------------------------------------------------------------------
+ROSLAUNCH
+create launch directory and a .launch file
+
+--------------------------------------------------------------------------------------------------------------------------------------
+ROSED
+#It allows you to directly edit a file within a package by using the package name rather than having to type the entire path to the package.
+rosed roscpp Logger.msg
+
+-----------------------------------------------------------------------------------------------------------------------------
+ROSMSG
+rosmsg show beginner_tutorials/Num #or we can supress the package
+
+ROSSRV
+rossrv show beginner_tutorials/AddTwoInts #or we can supress the package rossrv show AddTwoInts
+
